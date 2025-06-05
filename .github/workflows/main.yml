@@ -1,0 +1,32 @@
+name: Jest Tests and Coverage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_and_upload_coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Pas aan naar jouw Node-versie
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests and generate coverage
+        run: npm test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: true
